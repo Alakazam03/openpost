@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import fetch from 'node-fetch';
 import { Pool } from 'pg';
 
@@ -9,12 +9,13 @@ export class AuthService {
     @Inject('PG_POOL') private readonly pool: Pool
   ) {}
 
-  getLinkedInAuthUrl() {
+  getLinkedInAuthUrl(state: string) {
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: this.config.linkedinClientId ?? '',
       redirect_uri: this.config.linkedinRedirectUri ?? '',
-      scope: 'r_liteprofile r_emailaddress w_member_social'
+      scope: 'r_liteprofile r_emailaddress w_member_social',
+      state
     });
 
     return `https://www.linkedin.com/oauth/v2/authorization?${params.toString()}`;
@@ -33,6 +34,10 @@ export class AuthService {
       })
     });
 
+    if (!response.ok) {
+      throw new UnauthorizedException('Failed to exchange LinkedIn authorization code');
+    }
+
     return (await response.json()) as { access_token: string; expires_in: number };
   }
 
@@ -40,6 +45,11 @@ export class AuthService {
     const response = await fetch('https://api.linkedin.com/v2/me', {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
+
+    if (!response.ok) {
+      throw new UnauthorizedException('Failed to fetch LinkedIn profile');
+    }
+
     return (await response.json()) as { id: string };
   }
 
@@ -57,7 +67,9 @@ export class AuthService {
   }
 
   async disconnect(userId: string) {
-    await this.pool.query('UPDATE users SET access_token = NULL WHERE id = $1', [userId]);
+    await this.pool.query('UPDATE users SET access_token = NULL, refresh_token = NULL WHERE id = $1', [
+      userId
+    ]);
     return { success: true };
   }
 }

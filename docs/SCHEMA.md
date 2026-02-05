@@ -1,10 +1,12 @@
 # Database schema (proposed)
 
 ```sql
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   linkedin_id TEXT UNIQUE NOT NULL,
-  access_token TEXT NOT NULL,
+  access_token TEXT,
   refresh_token TEXT,
   expires_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT now()

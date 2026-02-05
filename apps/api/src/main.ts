@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppModule } from './modules/app.module';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +10,8 @@ async function bootstrap() {
     origin: process.env.APP_BASE_URL ?? 'http://localhost:3000',
     credentials: true
   });
+  app.use(cookieParser());
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -17,7 +19,7 @@ async function bootstrap() {
       transform: true
     })
   );
-  app.useGlobalGuards(new ThrottlerGuard());
+
   const port = process.env.PORT ? Number(process.env.PORT) : 4000;
   await app.listen(port);
 }

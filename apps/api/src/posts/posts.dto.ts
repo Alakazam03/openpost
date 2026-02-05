@@ -1,4 +1,13 @@
-import { IsArray, IsDateString, IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsDateString,
+  IsIn,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength
+} from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -11,17 +20,19 @@ export class CreatePostDto {
 
   @IsOptional()
   @IsArray()
+  @ArrayMaxSize(10)
   @IsString({ each: true })
   hashtags?: string[];
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @ArrayMaxSize(10)
+  @IsUrl({}, { each: true })
   mediaUrls?: string[];
 
   @IsOptional()
-  @IsIn(['image', 'pdf', null])
-  mediaType?: 'image' | 'pdf' | null;
+  @IsIn(['image', 'pdf'])
+  mediaType?: 'image' | 'pdf';
 
   @IsOptional()
   @IsIn(['draft', 'scheduled'])
@@ -36,21 +47,23 @@ export class UpdatePostDto {
 
   @IsOptional()
   @IsDateString()
-  scheduledAt?: string | null;
+  scheduledAt?: string;
 
   @IsOptional()
   @IsArray()
+  @ArrayMaxSize(10)
   @IsString({ each: true })
   hashtags?: string[];
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @ArrayMaxSize(10)
+  @IsUrl({}, { each: true })
   mediaUrls?: string[];
 
   @IsOptional()
-  @IsIn(['image', 'pdf', null])
-  mediaType?: 'image' | 'pdf' | null;
+  @IsIn(['image', 'pdf'])
+  mediaType?: 'image' | 'pdf';
 
   @IsOptional()
   @IsIn(['draft', 'scheduled'])

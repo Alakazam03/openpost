@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 import { QueueService } from '../queue/queue.service';
 import { CreatePostDto, UpdatePostDto } from './posts.dto';
@@ -14,6 +14,8 @@ export class PostsService {
 
   async createPost(userId: string, dto: CreatePostDto) {
     const status = dto.status ?? (dto.scheduledAt ? 'scheduled' : 'draft');
+    const scheduledAt = dto.scheduledAt ? new Date(dto.scheduledAt) : null;
+
     const result = await this.pool.query(
       `INSERT INTO posts (user_id, content, status, scheduled_at, hashtags, media_urls, media_type)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -22,7 +24,7 @@ export class PostsService {
         userId,
         dto.content,
         status,
-        dto.scheduledAt ? new Date(dto.scheduledAt) : null,
+        scheduledAt,
         dto.hashtags ?? [],
         dto.mediaUrls ?? [],
         dto.mediaType ?? null
@@ -30,7 +32,7 @@ export class PostsService {
     );
 
     const post = result.rows[0];
-    if (post.scheduled_at) {
+    if (post.status === 'scheduled' && post.scheduled_at) {
       await this.queueService.schedulePublish(post.id, post.scheduled_at.toISOString());
     }
 
@@ -47,32 +49,52 @@ export class PostsService {
   }
 
   async updatePost(userId: string, postId: string, dto: UpdatePostDto) {
+    const existingResult = await this.pool.query('SELECT * FROM posts WHERE id = $1 AND user_id = $2', [
+      postId,
+      userId
+    ]);
+
+    if (existingResult.rows.length === 0) {
+      throw new NotFoundException('Post not found');
+    }
+
+    const existing = existingResult.rows[0];
+    const next = {
+      content: dto.content ?? existing.content,
+      status: dto.status ?? existing.status,
+      scheduledAt: dto.scheduledAt ? new Date(dto.scheduledAt) : existing.scheduled_at,
+      hashtags: dto.hashtags ?? existing.hashtags,
+      mediaUrls: dto.mediaUrls ?? existing.media_urls,
+      mediaType: dto.mediaType ?? existing.media_type
+    };
+
     const result = await this.pool.query(
       `UPDATE posts SET
-        content = COALESCE($1, content),
-        status = COALESCE($2, status),
+        content = $1,
+        status = $2,
         scheduled_at = $3,
-        hashtags = COALESCE($4, hashtags),
-        media_urls = COALESCE($5, media_urls),
-        media_type = COALESCE($6, media_type)
+        hashtags = $4,
+        media_urls = $5,
+        media_type = $6
        WHERE id = $7 AND user_id = $8
        RETURNING *`,
       [
-        dto.content ?? null,
-        dto.status ?? null,
-        dto.scheduledAt ? new Date(dto.scheduledAt) : null,
-        dto.hashtags ?? null,
-        dto.mediaUrls ?? null,
-        dto.mediaType ?? null,
+        next.content,
+        next.status,
+        next.scheduledAt,
+        next.hashtags,
+        next.mediaUrls,
+        next.mediaType,
         postId,
         userId
       ]
     );
 
     const post = result.rows[0];
-    if (post?.scheduled_at) {
+    if (post.status === 'scheduled' && post.scheduled_at) {
       await this.queueService.schedulePublish(post.id, post.scheduled_at.toISOString());
     }
+
     return post;
   }
 
