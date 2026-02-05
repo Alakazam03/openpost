@@ -52,3 +52,7 @@ npm run dev:web
 - **Env:** Ensure all values in `.env.example` are set in the target environment.
 
 See `docs/DEPLOYMENT.md` for production guidance.
+
+## Design handoff
+
+Figma-ready MVP screen specs and importable SVG wireframes are available in `docs/FIGMA_SCREENS.md` and `docs/figma/`.
