@@ -1,0 +1,19 @@
+<svg width="1440" height="1024" viewBox="0 0 1440 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1440" height="1024" fill="#F8FAFC"/>
+<rect x="80" y="120" width="780" height="820" rx="16" fill="#FFFFFF" stroke="#E2E8F0"/>
+<rect x="884" y="120" width="476" height="820" rx="16" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="112" y="170" font-family="Inter, Arial" font-size="24" font-weight="600" fill="#0F172A">AI Assistant</text>
+<text x="112" y="210" font-family="Inter, Arial" font-size="12" fill="#64748B">Post type</text>
+<rect x="112" y="220" width="716" height="44" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="132" y="248" font-family="Inter, Arial" font-size="14" fill="#0F172A">Thought leadership</text>
+<text x="112" y="300" font-family="Inter, Arial" font-size="12" fill="#64748B">Tone</text>
+<rect x="112" y="310" width="100" height="30" rx="15" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="133" y="329" font-family="Inter, Arial" font-size="12" fill="#0F172A">Professional</text>
+<rect x="222" y="310" width="80" height="30" rx="15" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="248" y="329" font-family="Inter, Arial" font-size="12" fill="#0F172A">Casual</text>
+<text x="112" y="380" font-family="Inter, Arial" font-size="12" fill="#64748B">Context</text>
+<rect x="112" y="390" width="716" height="180" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
+<rect x="112" y="600" width="130" height="40" rx="20" fill="#0A66C2"/><text x="132" y="625" font-family="Inter, Arial" font-size="14" fill="#FFFFFF">Generate draft</text>
+<text x="916" y="170" font-family="Inter, Arial" font-size="18" font-weight="600" fill="#0F172A">Editable output</text>
+<rect x="916" y="200" width="412" height="650" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
+</svg>
