@@ -56,3 +56,14 @@ See `docs/DEPLOYMENT.md` for production guidance.
 ## Design handoff
 
 Figma-ready MVP screen specs and importable SVG wireframes are available in `docs/FIGMA_SCREENS.md` and `docs/figma/`.
+
+## Product planning
+
+- SuperShrimp-style build plan: `docs/SUPERSHRIMP_IMPLEMENTATION_PLAN.md`
+
+## Build progress (SuperShrimp-style MVP)
+
+- ✅ Step 1.1: Added posture scoring `v1` + `v2` endpoints with harness tests.
+- ✅ Step 1: Core web dashboard shell adapted for posture analytics.
+- ✅ Step 1: API starter endpoints added for `sessions`, `stats`, and `licenses`.
+- 🔜 Step 2: Wire desktop capture/inference client and persist minute-level aggregates.

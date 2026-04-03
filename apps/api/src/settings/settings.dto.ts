@@ -2,8 +2,8 @@ import { IsString } from 'class-validator';
 
 export class UpdateSettingsDto {
   @IsString()
-  timezone: string;
+  timezone!: string;
 
   @IsString()
-  defaultPostTime: string;
+  defaultPostTime!: string;
 }

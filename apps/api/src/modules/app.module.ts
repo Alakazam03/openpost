@@ -9,6 +9,10 @@ import { PostsModule } from './posts.module';
 import { AiModule } from './ai.module';
 import { AuthModule } from './auth.module';
 import { SettingsModule } from './settings.module';
+import { StatsModule } from './stats.module';
+import { LicensesModule } from './licenses.module';
+import { SessionsModule } from './sessions.module';
+import { PostureModule } from './posture.module';
 
 @Module({
   imports: [
@@ -19,6 +23,10 @@ import { SettingsModule } from './settings.module';
     AiModule,
     AuthModule,
     SettingsModule,
+    SessionsModule,
+    LicensesModule,
+    StatsModule,
+    PostureModule,
     ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([
       {

@@ -12,7 +12,7 @@ import {
 export class CreatePostDto {
   @IsString()
   @MaxLength(3000)
-  content: string;
+  content!: string;
 
   @IsOptional()
   @IsDateString()
